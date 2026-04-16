@@ -9,19 +9,17 @@
         !isset($_SESSION["user"]) ? "sign in" : "home" => !isset($_SESSION["user"]) ? "login.php" : "./home/dashboard.php"
     ];
 
-    function login()
+    function ticketSale()
     {
         // SE REALIZA POST DE FORMULARIO HACIA PROCESS
-        // AHI SE OBTIENE
-        //  EXISTENCIA EN DB
-        //  TIPO DE USUARIO
+        // AHI SE REGISTRAN TICKERS
         echo '<form action="./process.php" method="POST">';
             echo '<label for="user">';
-                echo '<span>Usuario</span>';
+                echo '<span>Cantidad de boletos</span>';
                 echo '<input type="text" name="username">';
             echo '</label>';
             echo '<label for="contraseña">';
-                echo '<span>Contraseña</span>';
+                echo '<span>Pelicula</span>';
                 echo '<input type="text" name="password">';
             echo '</label>';
             echo '<button type="submit">Enviar</button>';

@@ -1,15 +1,12 @@
 <?php
-    function pdo_usuarios(){
         try {
             $pdo = new PDO(
-                "mysql:host=localhost;dbname=usuarios",
+                "mysql:host=localhost;dbname=examen_php",
                 "root",
                 "");
-            echo "Conexion exitosa";
             return $pdo;
         } catch (PDOException $e) {
             echo "$error->getMessage()";
             return null;
         }
-    }
 ?>

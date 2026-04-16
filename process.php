@@ -5,21 +5,27 @@
         $sql = "SELECT * FROM usuarios WHERE username = ? AND password = ?";
         $stmt = $pdo->prepare($sql);
 
-        $bool = $stmt->execute([$nombre,$password]);
-        var_dump($bool);
-        var_dump($stmt);
+        $bool = $stmt->execute([$username,$password]);
         return $bool;
+    }
+
+    function setSession($arg1,$arg2){
+            $_SESSION["username"] = $arg1; 
+            $_SESSION["password"] = $arg2; 
     }
 
     function handle_POST(){
         if ($_SERVER["REQUEST_METHOD"] === "POST"){
+            $username = $_POST["username"];
+            $password = $_POST["password"];
             // OBTENEMOS USERNAME Y PASSWORD
-            if($_SERVER["username"] && $_SERVER["password"]){
-                result_bool = db_fetch_user($pdo,$_SERVER["username"],$_SERVER["password"]);
-                result_bool ? echo "gg" : echo "failed";
-                return;
+            require("./db/conexion.php");
+            if(!empty($username) && !empty($password))
+            {
+                $result_bool = db_fetch_user($pdo,$username,$password);
+                return $result_bool;
             }
-        }
+        }   
     }
 
     function handle_GET(){
@@ -37,9 +43,14 @@
 </head>
 <body>
     <?php
-        // handle_POST();
+        if(handle_POST()){
+            header("Location: ../movies.php?success=1&code=400");
+            exit;
+        } else {
+            header("Location: ../index.php?success=0&code=401");
+            exit;
+        }
         // handle_GET();
-        require("./db/conexion.php");
     ?>
 </body>
 </html>
