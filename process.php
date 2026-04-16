@@ -13,17 +13,24 @@
             $_SESSION["username"] = $arg1; 
             $_SESSION["password"] = $arg2; 
     }
+    function submit_compra($pdo,$numboletos,$username,$password,$movie)
 
     function handle_POST(){
         if ($_SERVER["REQUEST_METHOD"] === "POST"){
             $username = $_POST["username"];
             $password = $_POST["password"];
+            $numboletos = $_POST["numboletos"];
+            $movie = $_POST["movie"];
             // OBTENEMOS USERNAME Y PASSWORD
             require("./db/conexion.php");
             if(!empty($username) && !empty($password))
             {
                 $result_bool = db_fetch_user($pdo,$username,$password);
                 return $result_bool;
+            }
+            if(!empty($numboletos) && !empty($movie))
+            {
+
             }
         }   
     }
@@ -44,10 +51,10 @@
 <body>
     <?php
         if(handle_POST()){
-            header("Location: ../movies.php?success=1&code=400");
+            header("Location: ./movies.php?success=1&code=400");
             exit;
         } else {
-            header("Location: ../index.php?success=0&code=401");
+            header("Location: ./index.php?success=0&code=401");
             exit;
         }
         // handle_GET();
