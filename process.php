@@ -6,14 +6,41 @@
         $stmt = $pdo->prepare($sql);
 
         $bool = $stmt->execute([$username,$password]);
-        return $bool;
+        return $stmt->rowCount() > 0;  // Returns true if at least 1 row found
     }
 
     function setSession($arg1,$arg2){
             $_SESSION["username"] = $arg1; 
             $_SESSION["password"] = $arg2; 
     }
-    function submit_compra($pdo,$numboletos,$username,$password,$movie)
+
+    function submit_compra($pdo, $numboletos, $username, $password, $movie)
+    {
+        $sql_id = "SELECT peliculas.id FROM peliculas WHERE peliculas.titulo = ?";
+        $stmt_id = $pdo->prepare($sql_id);
+        $stmt_id->execute([$movie]);
+        $id_pelicula = $stmt_id->fetchColumn();
+        
+        $sql_precio = "SELECT peliculas.precio FROM peliculas WHERE peliculas.titulo = ?";
+        $stmt_precio = $pdo->prepare($sql_precio);
+        $stmt_precio->execute([$movie]);
+        $precio = $stmt_precio->fetchColumn();
+        
+        $sql_insert = "
+            INSERT INTO compras (usuario, id_pelicula, nombre_pelicula, cantidad_boletos, precio_boleto, monto_total)
+            VALUES (?, ?, ?, ?, ?, ?)
+        ";
+        
+        $stmt_insert = $pdo->prepare($sql_insert);
+        return $stmt_insert->execute([
+            $username,
+            $id_pelicula,
+            $movie,
+            $numboletos,
+            $precio,
+            $precio * $numboletos
+        ]);
+    }
 
     function handle_POST(){
         if ($_SERVER["REQUEST_METHOD"] === "POST"){
@@ -26,11 +53,17 @@
             if(!empty($username) && !empty($password))
             {
                 $result_bool = db_fetch_user($pdo,$username,$password);
+                if($result_bool){
+                    setSession($username,$password);
+                }
                 return $result_bool;
             }
             if(!empty($numboletos) && !empty($movie))
             {
-
+                $username = $_SESSION["username"];
+                $password = $_SESSION["password"];
+                $result_transaction = submit_compra($pdo,$numboletos,'juana','juan',$movie);
+                return $result_transaction;
             }
         }   
     }
@@ -57,7 +90,7 @@
             header("Location: ./index.php?success=0&code=401");
             exit;
         }
-        // handle_GET();
+        handle_GET();
     ?>
 </body>
 </html>

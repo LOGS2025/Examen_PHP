@@ -1,12 +1,18 @@
 <?php
     session_start();
 
+    $loggedIn_flag = false;
+    
+    if (isset($_SESSION["username"]) && isset($_SESSION["password"])){
+        $loggedIn_flag = true;
+    }
+
     $sitios = [
         "inicio" => "index.php",
         "sobreNosotros" => "sobreNosotros.php",
         "organigrama" => "organigrama.php",
         "contacto" => "contacto.php",
-        !isset($_SESSION["user"]) ? "sign in" : "home" => !isset($_SESSION["user"]) ? "login.php" : "./home/dashboard.php"
+        "logout" => "./process.php?request=logout"
     ];
 
     function getMovies(){
@@ -20,7 +26,7 @@
         return $movies;
     }
         
-    function ticketSale($movies)
+    function ticketSale($movie)
     {
         // SE REALIZA POST DE FORMULARIO HACIA PROCESS
         // AHI SE REGISTRAN TICKERS
@@ -32,15 +38,12 @@
             echo '<button type="submit">Enviar</button>';
             echo '<label for "movie">Elige una pelicula</label>';
                 echo '<select name="movie" id="movie">';
-                foreach($movies as $movie){
-                    echo '<option value='.$movie["titulo"].'>'.$movie["titulo"].'</option>';
-                }
+                echo '<option value='.$movie["titulo"].'>'.$movie["titulo"].'</option>';
                 echo '</select>';
         echo '</form>';
     }
             
-            
-            ?>
+    ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -61,6 +64,7 @@
                         echo "<div> {$movie['titulo']}</div>";
                         echo "<div> {$movie['descripcion']}</div>";
                         echo "<div> {$movie['precio']}</div>";
+                        ticketSale($movie);
                         echo "<br>";
                     }
                 ?>

@@ -1,12 +1,18 @@
 <?php
     session_start();
 
+    $loggedIn_flag = false;
+    
+    if (isset($_SESSION["username"]) && isset($_SESSION["password"])){
+        header("Location: ./movies.php");
+        exit;
+    }
+
     $sitios = [
         "inicio" => "index.php",
         "sobreNosotros" => "sobreNosotros.php",
         "organigrama" => "organigrama.php",
         "contacto" => "contacto.php",
-        !isset($_SESSION["user"]) ? "sign in" : "home" => !isset($_SESSION["user"]) ? "login.php" : "./home/dashboard.php"
     ];
 
     function login()
