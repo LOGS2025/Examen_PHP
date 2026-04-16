@@ -2,17 +2,22 @@
     session_start();
 
     $loggedIn_flag = false;
+    $loggedAsAdmin = false;
     
+    if ($_SESSION["username"]=='admin' && $_SESSION["password"]=='1234'){
+        $loggedAsAdmin = true;
+    }
     if (isset($_SESSION["username"]) && isset($_SESSION["password"])){
         $loggedIn_flag = true;
+    } else {
+        header("Location: ./index.php");
+        exit;
     }
 
     $sitios = [
-        "inicio" => "index.php",
-        "sobreNosotros" => "sobreNosotros.php",
-        "organigrama" => "organigrama.php",
-        "contacto" => "contacto.php",
+        "inicio" => "./index.php",
         "logout" => "./process.php?request=logout"
+        $loggedAsAdmin ? "dev" : "" => "./dev.php" 
     ];
 
     function getMovies(){

@@ -10,9 +10,6 @@
 
     $sitios = [
         "inicio" => "index.php",
-        "sobreNosotros" => "sobreNosotros.php",
-        "organigrama" => "organigrama.php",
-        "contacto" => "contacto.php",
     ];
 
     function login()

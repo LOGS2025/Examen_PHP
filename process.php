@@ -62,7 +62,7 @@
             {
                 $username = $_SESSION["username"];
                 $password = $_SESSION["password"];
-                $result_transaction = submit_compra($pdo,$numboletos,'juana','juan',$movie);
+                $result_transaction = submit_compra($pdo,$numboletos,$username,$password,$movie);
                 return $result_transaction;
             }
         }   
@@ -70,8 +70,22 @@
 
     function handle_GET(){
         if ($_SERVER["REQUEST_METHOD"] === "GET"){
-            var_dump($_GET);
+            if ($_GET['request'] == "logout") {
+                session_unset();
+                session_destroy();
+                header("Location: ./index.php");
+                exit;
+            }
         }
+    }
+
+    handle_GET();
+    if(handle_POST()){
+        header("Location: ./movies.php?success=1&code=400");
+        exit;
+    } else {
+        header("Location: ./index.php?success=0&code=401");
+        exit;
     }
 ?>
 <!DOCTYPE html>
@@ -83,14 +97,7 @@
 </head>
 <body>
     <?php
-        if(handle_POST()){
-            header("Location: ./movies.php?success=1&code=400");
-            exit;
-        } else {
-            header("Location: ./index.php?success=0&code=401");
-            exit;
-        }
-        handle_GET();
+
     ?>
 </body>
 </html>
